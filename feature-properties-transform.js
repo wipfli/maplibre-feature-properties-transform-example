@@ -1,6 +1,6 @@
 // Make the third letter of the value stored in the 'NAME' tag uppercase.
 
-const featurePropertiesTransform = (source, sourceLayer, tileID, properties) => {
+const featurePropertiesTransform = (source, sourceLayer, tileID, geometryType, featureID, properties) => {
 
     if (properties === null) return;
 

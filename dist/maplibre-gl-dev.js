@@ -32365,6 +32365,7 @@ exports.UniformColor = UniformColor;
 exports.UniformMatrix4f = UniformMatrix4f;
 exports.UnwrappedTileID = UnwrappedTileID;
 exports.ValidationError = ValidationError;
+exports.VectorTileFeature = VectorTileFeature;
 exports.ZoomHistory = ZoomHistory;
 exports.__awaiter = __awaiter;
 exports.add = add$4;
@@ -32619,7 +32620,7 @@ class WorkerTile {
                 for (let index = 0; index < sourceLayer.length; index++) {
                     const feature = sourceLayer.feature(index);
                     if (featurePropertiesTransform) {
-                        featurePropertiesTransform(this.source, sourceLayerId, this.tileID.toString(), feature.properties);
+                        featurePropertiesTransform(this.source, sourceLayerId, this.tileID.toString(), performance.VectorTileFeature.types[feature.type], feature.id, feature.properties);
                     }
                     const id = featureIndex.getId(feature, sourceLayerId);
                     features.push({ feature, id, index, sourceLayerIndex });
@@ -58791,9 +58792,7 @@ exports.MercatorCoordinate = performance$1.MercatorCoordinate;
 exports.Point = performance$1.Point;
 exports.addProtocol = performance$1.addProtocol;
 exports.config = performance$1.config;
-exports.getFeaturePropertiesTransform = performance$1.getFeaturePropertiesTransform;
 exports.removeProtocol = performance$1.removeProtocol;
-exports.setFeaturePropertiesTransform = performance$1.setFeaturePropertiesTransform;
 exports.AttributionControl = AttributionControl;
 exports.BoxZoomHandler = BoxZoomHandler;
 exports.CanvasSource = CanvasSource;

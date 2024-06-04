@@ -24,7 +24,7 @@
 <body>
     <div id="map"></div>
     <script>
-        maplibregl.importScriptInWorkers('https://wipfli.github.io/maplibre-feature-properties-transform-example/feature-properties-transform.js');
+        maplibregl.importScriptInWorkers(window.location.origin + '/' + window.location.pathname + '/feature-properties-transform.js');
 
         const map = new maplibregl.Map({
             container: 'map',
