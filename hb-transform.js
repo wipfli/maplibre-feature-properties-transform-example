@@ -9,7 +9,7 @@ async function prepare() {
     const wasm = await fetch("https://harfbuzz.github.io/harfbuzzjs/hb.wasm");
     const wasmInstance = await WebAssembly.instantiate(await wasm.arrayBuffer());
     hb = hbjs(wasmInstance.instance);
-    const rawFont = await fetch('http://localhost:3000/NotoSansDevanagari-Regular.ttf');
+    const rawFont = await fetch('https://wipfli.github.io/maplibre-feature-properties-transform-example/NotoSansDevanagari-Regular.ttf');
     // const rawFont = await fetch('http://localhost:3000/Frutiger-Neue-Regular.ttf');
     var fontBlob = new Uint8Array(await rawFont.arrayBuffer());
 
@@ -19,7 +19,7 @@ async function prepare() {
 
     font.setScale(1000, 1000);
 
-    const encodingRaw = await fetch('http://localhost:3000/encoding.csv');
+    const encodingRaw = await fetch('https://wipfli.github.io/maplibre-feature-properties-transform-example/encoding.csv');
     const encodingCSV = await encodingRaw.text();
     const encodingLines = encodingCSV.split('\n');
     
