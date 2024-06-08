@@ -73,7 +73,10 @@
 
         var settings = `var script = '${script}'; var language = '${language}';`;
 
-        maplibregl.importScriptInWorkers(`data:,${settings}${transform}`);
+        const decodedString = decodeURIComponent(`${settings}${transform}`);
+        const blob = new Blob([decodedString], { type: 'application/javascript' });
+        const workerUrl = URL.createObjectURL(blob);
+        maplibregl.importScriptInWorkers(workerUrl);
 
         const map = new maplibregl.Map({
             container: 'map',

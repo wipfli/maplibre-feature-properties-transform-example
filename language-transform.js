@@ -90,4 +90,3 @@ const featurePropertiesTransform = (source, sourceLayer, tileID, geometryType, f
 };
 
 self.setFeaturePropertiesTransform(featurePropertiesTransform);
-
