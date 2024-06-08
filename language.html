@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Protomaps Language Switch</title>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='stylesheet' href='https://unpkg.com/maplibre-gl@4.0.0/dist/maplibre-gl.css' />
+    <script src='./dist/maplibre-gl-dev.js'></script>
+    <style>
+        body { margin: 0; padding: 0; }
+        html, body, #map { height: 100%; }
+        .dropdown-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1; /* Ensure the dropdown is above the map */
+            background-color: white;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+<div class="dropdown-container">
+    <select id="map-dropdown">
+        <option value="en">English</option>
+        <option value="it">Italian</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="el">Greek</option>
+        <option value="ar">Arabic</option>
+        <option value="bu">Bulgarian</option>
+        <option value="cn">Chinese</option>
+    </select>
+</div>
+<div id="map"></div>
+<script>
+
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    function setQueryParam(param, value) {
+        const url = new URL(window.location);
+        url.searchParams.set(param, value);
+        window.history.replaceState(null, '', url.toString());
+    }
+
+    var script = getQueryParam('script');
+    if (!script) {
+        setQueryParam('script', 'Latin');
+        script = 'Latin';
+    }
+
+    var language = getQueryParam('language');
+    if (!language) {
+        setQueryParam('language', 'en');
+        language = 'en';
+    }
+
+    async function run() {
+
+        maplibregl.setRTLTextPlugin(
+            'https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.2.3/mapbox-gl-rtl-text.min.js',
+            true
+        );
+
+        const response = await fetch('language-transform.js');
+
+        var transform = await response.text();
+
+        var settings = `var script = '${script}'; var language = '${language}';`;
+
+        maplibregl.importScriptInWorkers(`data:,${settings}${transform}`);
+
+        const map = new maplibregl.Map({
+            container: 'map',
+            style: 'style-language.json',
+            center: [24, 38],
+            zoom: 8,
+            hash: "map"
+        });
+    }
+
+    run();
+
+    function dropdownChanged() {
+        const language = document.getElementById('map-dropdown').value;
+        var script = '';
+        if (['en', 'it', 'de', 'fr'].includes(language)) {
+            script = 'Latin';
+        }
+        else if (['el'].includes(language)) {
+            script = 'Greek';
+        }
+        else if (['ar'].includes(language)) {
+            script = 'Arabic';
+        }
+        else if (['bu'].includes(language)) {
+            script = 'Cyrillic';
+        }
+        else if (['cn'].includes(language)) {
+            script = 'Han';
+        }
+
+        window.location.href = `language?script=${script}&language=${language}${window.location.hash}`;
+    }
+
+    document.getElementById('map-dropdown').addEventListener('change', dropdownChanged);
+    document.getElementById('map-dropdown').value = language;
+    
+</script>
+</body>
+</html>
