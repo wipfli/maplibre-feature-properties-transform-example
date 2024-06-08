@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='stylesheet' href='./dist/maplibre-gl.css' />
+    <script src='./dist/maplibre-gl-dev.js'></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        maplibregl.importScriptInWorkers('http://localhost:3000/hb-transform.js');
+
+        const map = new maplibregl.Map({
+            container: 'map',
+            style: 'style-hb.json',
+            center: [8, 47],
+            zoom: 1,
+            hash: 'map'
+        });
+    </script>
+</body>
+
+</html>
