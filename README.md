@@ -29,3 +29,9 @@ Shape Hindi text labels with HarfBuzz.
 **Note**: it may take some seconds for HarfBuzz and the font resources to be ready. Tiles loaded initially will show wrong Hindi labels. So zoom out, load the map, then zoom in to get correctly shaped labels.
 
 https://wipfli.github.io/maplibre-feature-properties-transform-example/hb
+
+### Live Weather
+
+Request live weather with `fetch` and store temperature in the feature properties.
+
+https://wipfli.github.io/maplibre-feature-properties-transform-example/live-weather/

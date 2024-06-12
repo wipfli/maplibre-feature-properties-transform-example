@@ -32620,7 +32620,7 @@ class WorkerTile {
                 for (let index = 0; index < sourceLayer.length; index++) {
                     const feature = sourceLayer.feature(index);
                     if (featurePropertiesTransform) {
-                        featurePropertiesTransform(this.source, sourceLayerId, this.tileID.toString(), performance.VectorTileFeature.types[feature.type], feature.id, feature.properties);
+                        yield featurePropertiesTransform(this.source, sourceLayerId, this.tileID.toString(), performance.VectorTileFeature.types[feature.type], feature.id, feature.properties);
                     }
                     const id = featureIndex.getId(feature, sourceLayerId);
                     features.push({ feature, id, index, sourceLayerIndex });
