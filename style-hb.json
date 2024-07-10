@@ -4,7 +4,7 @@
       "protomaps": {
         "type": "vector",
         "attribution": "<a href=\"https://github.com/protomaps/basemaps\">Protomaps</a> © <a href=\"https://openstreetmap.org\">OpenStreetMap</a>",
-        "url": "https://tiles.swiss-map.cc/protomaps-planet-pgf-20240215.json"
+        "url": "https://tiles.swiss-map.cc/protomaps-z10.json"
       }
     },
     "layers": [
