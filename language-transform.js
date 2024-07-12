@@ -1,15 +1,7 @@
-
-
 function containsOnlyScriptCharacters(str, script) {
     var pattern = `^[\\p{Script=${script}}\\p{P}\\p{S}\\p{Z}\\p{N}\\p{M}]*$`;
     var re = new RegExp(pattern, 'u');
     return re.test(str);
-}
-
-function deleteScriptCharacters(str, script) {
-    var pattern = `[\\p{Script=${script}}]`;
-    var re = new RegExp(pattern, 'gu');
-    return str.replace(re, '');
 }
 
 function getLatinName(properties) {
@@ -17,12 +9,11 @@ function getLatinName(properties) {
         return properties['name'];
     }
     
-    const languages = ['en', 'es', 'fr', 'pt', 'de'];
+    const tags = ['int_name', 'name:en', 'name:de'];
 
-    for (const language of languages) {
-        const key = `name:${language}`;
-        if (key in properties) {
-            return properties[key];
+    for (const tag of tags) {
+        if (tag in properties) {
+            return properties[tag];
         }
     }
     
@@ -32,6 +23,46 @@ function getLatinName(properties) {
         }
     }
 
+    return '';
+}
+
+const getFirstLine = (properties) => {
+    var pmapScript = properties['pmap:script'] === undefined ? "Latin" : properties['pmap:script'];
+
+    if (`name:${language}` in properties) {
+        return properties[`name:${language}`];
+    }
+
+    if (pmapScript === script) {
+        return properties['name'];
+    }
+
+    if (script === 'Latin') {
+        return getLatinName(properties);
+    }
+    else {
+        for (var key in properties) {
+            // loop though properties
+            if (key.startsWith('name:') && containsOnlyScriptCharacters(properties[key], script)) {
+                // take first name:* that has the target script
+                return properties[key];
+            }
+        }
+    }
+
+    if (script !== 'Latin' && pmapScript !== 'Latin') {
+        return getLatinName(properties);
+    }
+
+    return '';
+}
+
+const getSecondLine = (properties) => {
+    var pmapScript = properties['pmap:script'] === undefined ? "Latin" : properties['pmap:script'];
+
+    if ('name' in properties && pmapScript !== script) {
+        return properties['name'];
+    }
     return '';
 }
 
@@ -47,41 +78,14 @@ const featurePropertiesTransform = (source, sourceLayer, tileID, geometryType, f
     
     if (properties === null) return;
     if (source !== 'protomaps') return;
-    //if (sourceLayer != 'places') return;
 
-    var firstLine = '';
-    if (`name:${language}` in properties) {
-        firstLine = properties[`name:${language}`];
-    }
-    else {
-        if ('name' in properties && containsOnlyScriptCharacters(properties['name'], script)) {
-            firstLine = properties['name'];
-        }
-        else {
-            for (var key in properties) {
-                if (key.startsWith('name:') && containsOnlyScriptCharacters(properties[key], script)) {
-                    firstLine = properties[key];
-                    break;
-                }
-            }
-        }            
-    }
-
-    var secondLine = '';
-    if ('name' in properties && !containsOnlyScriptCharacters(properties['name'], script)) {
-        secondLine = deleteScriptCharacters(properties['name'], script);
-    }
-
-    if (firstLine === '' && script !== 'Latin' && !containsOnlyScriptCharacters(secondLine, 'Latin')) {
-        // fallback to Latin
-        firstLine = getLatinName(properties);
-        secondLine = deleteScriptCharacters(secondLine, 'Latin');
-    }
+    var firstLine = getFirstLine(properties);
+    var secondLine = getSecondLine(properties);
 
     var parsedName = firstLine + ' \n' + secondLine;
     parsedName = parsedName.trim();
 
-    if (properties['pmap:kind'] === 'country') {
+    if (['country', 'bay', 'sea', 'strait'].includes(properties['pmap:kind']) && firstLine !== '') {
         properties['name'] = firstLine;
     }
     else {
